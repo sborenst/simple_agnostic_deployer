@@ -1,0 +1,18 @@
+# vim: set ft=ansible:
+---
+######################### Run a complete yum update
+- name: Update all packages
+  register: ryum
+  retries: 3
+  until: ryum is succeeded
+  yum:
+    name: '*'
+    state: latest
+  fork: 20
+  when: update_packages|bool
+
+######################## Install Basic Packages
+- name: Install Basic Packages
+  include: ./packages.yml
+  tags:
+    - install_basic_packages

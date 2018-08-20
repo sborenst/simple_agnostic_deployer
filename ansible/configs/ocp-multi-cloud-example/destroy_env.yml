@@ -1,0 +1,20 @@
+---
+- name: Delete Infrastructure
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  become: no
+  vars_files:
+  - ".//configs/{{ env_type }}/env_vars.yml"
+  - ".//configs/{{ env_type }}/env_secret_vars.yml"
+
+  tasks:
+    - name: Run infra-ec2-template-destroy
+      include_role:
+        name: ".//roles/infra-{{cloud_provider}}-template-destroy"
+      when: cloud_provider == 'ec2'
+
+    - name: Run infra-azure-template-destroy
+      include_role:
+        name: ".//roles/infra-{{cloud_provider}}-template-destroy"
+      when: cloud_provider == 'azure'

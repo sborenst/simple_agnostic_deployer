@@ -1,0 +1,54 @@
+---
+- name: Step 003.1 - Create SSH Key for environment
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  become: false
+  tags:
+    - step003
+    - step003.1
+    - generate_env_keys
+  tasks:
+  roles:
+    - role: ".//roles/infra-local-create-ssh_key"
+      when: set_env_authorized_key is defined
+
+- name: Step 003.2 - Configure Repositories, Run common Role and Set SSH Key as authorised
+  hosts:
+    - all:!windows
+  become: true
+  gather_facts: False
+  tags:
+    - step003
+    - step003.2
+    - common_tasks
+  roles:
+   - role: "./roles/host-set-env-authorized-key"
+     when: set_env_authorized_key|bool
+   - role: "roles/host-set-repositories"
+     when: repo_method is defined
+   - role: "roles/host-common-tasks"
+     when: install_common|bool
+
+- name: Configuring Bastion Hosts
+  hosts: bastions
+  become: true
+  gather_facts: false
+  roles:
+   - role: "./roles/host-bastion"
+     when: install_bastion|bool
+  tags:
+    - step003
+    - step003.2
+    - common_tasks
+
+- name: PreSoftware flight-check
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  become: false
+  tags:
+    - flight_check
+  tasks:
+    - debug:
+        msg: "Pre-Software checks completed successfully"

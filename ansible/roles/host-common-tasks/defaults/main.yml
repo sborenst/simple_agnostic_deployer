@@ -1,0 +1,13 @@
+---
+common_packages:
+  - python
+  - unzip
+  - bash-completion
+  - tmux
+  - bind-utils
+  - wget
+  - ansible
+  - git
+  - vim-enhanced
+
+update_packages: false

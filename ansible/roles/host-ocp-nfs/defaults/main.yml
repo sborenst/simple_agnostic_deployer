@@ -1,0 +1,14 @@
+---
+nfs_packages:
+  - lvm2
+  - bind-utils
+  - nfs-utils
+
+nfs_shares:
+  - example1
+  - example2
+
+nfs_vg: nfsvg
+nfs_pvs: /dev/xvdd
+nfs_export_path: /srv/nfs
+nfs_size: 200

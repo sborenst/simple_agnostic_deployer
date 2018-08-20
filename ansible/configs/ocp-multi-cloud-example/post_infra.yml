@@ -1,0 +1,139 @@
+
+- name: Step 002.1 Create Inventory
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  become: false
+  tags:
+    - step002
+    - step002.1
+    - create_inventory
+  tasks:
+  - name: Gather EC2 facts
+    ec2_remote_facts :
+      aws_access_key: "{{ aws_access_key_id }}"
+      aws_secret_key: "{{ aws_secret_access_key }}"
+      region: "{{ aws_region_final | default(aws_region) | default(region) | default('us-east-1')}}"
+      filters:
+        instance-state-name: running
+        "tag:Project": "{{project_tag}}"
+    register: ec2_facts
+    tags:
+      - create_inventory
+
+  - name: print out ec2 facts
+    debug:
+      var: ec2_facts
+    tags:
+      - create_inventory
+
+  - name: add hosts to in-memory inventory
+    add_host:
+        name: "{{item['public_dns_name']}}"
+        shortname: "{{item.tags.Name | default(item.private_dns_name)}}"
+        groups:
+          - "{{item.tags.ostype | default('unknowns')}}"
+          - "{{item.tags.AnsibleGroup}}"
+        ansible_ssh_user: ec2-user
+        remote_user: ec2-user
+        ansible_ssh_private_key_file: "~/.ssh/{{item['key_name']}}.pem"
+        key_name: "{{item['key_name']}}"
+        state: "{{item['state']}}"
+        internaldns: "{{item.tags.internaldns | default(item.private_dns_name)}}"
+        instance_id: "{{ item.id }}"
+        region: "{{item['region']}}"
+        public_dns_name: "{{item['public_dns_name']}}"
+        private_dns_name: "{{item['private_dns_name']}}"
+        private_ip_address: "{{item['private_ip_address']}}"
+        public_ip_address: "{{item['public_ip_address']}}"
+        placement: "{{item['placement']['zone']}}"
+        image_id: "{{item['image_id']}}"
+        ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+    with_items: "{{ec2_facts['instances']}}"
+      # loop_control:
+      #   label: "{{item.tags.internaldns | default(item.private_dns_name)}}"
+
+  - name: print out the inventory (hostvars variable)
+    debug:
+      var: hostvars
+
+  - name: print out the inventory (groups variable)
+    debug:
+      var: groups
+
+- name: Step 001.1 ping infra
+  hosts: all
+  gather_facts: false
+  become: false
+  tasks:
+  - name: print out ec2 facts
+    debug:
+      var: aws_region
+  - ping:
+    register: rping
+    retries: 3
+    delay: 10
+    until: rping is succeeded
+    tags: must
+
+
+# - name: Step 001.3 Configure Linux Hosts and Wait for Connection
+#   hosts:
+#     - all:!windows:!network
+#   vars_files:
+#     - ".//configs/{{ env_type }}/env_vars.yml"
+#     - ".//configs/{{ env_type }}/env_secret_vars.yml"
+#   gather_facts: false
+#   any_errors_fatal: true
+#   ignore_errors: false
+#   become: true
+#   tags:
+#     - step001
+#     - step001.3
+#     - wait_ssh
+#     - set_hostname
+#   tasks:
+#     - name: set facts for remote access
+#       tags:
+#         - create_inventory
+#       set_fact:
+#         aws_region_final: "{{hostvars['localhost'].aws_region_final}}"
+#         ansible_ssh_extra_args: ".//workdir/{{ env_type }}_{{ guid }}_ssh_conf"
+#
+#     - name: Run infra-ec2-wait_for_linux_hosts Role
+#       import_role:
+#         name: ".//roles/infra-ec2-wait_for_linux_hosts"
+#     - name: Run infra-ec2-linux-set-hostname Role
+#       import_role:
+#         name: ".//roles/infra-ec2-linux-set-hostname"
+#
+#
+#
+# - name: Step 001.4 Configure Windows Hosts and Wait for Connection
+#   gather_facts: false
+#   hosts:
+#     - windows
+#   vars_files:
+#     - ".//configs/{{ env_type }}/env_vars.yml"
+#     - ".//configs/{{ env_type }}/env_secret_vars.yml"
+#   tags:
+#     - step001
+#     - step001.4
+#   tasks:
+#     - name: set facts for remote access
+#       tags:
+#         - create_inventory
+#       set_fact:
+#         ansible_become: false
+#         ansible_connection: winrm
+#         ansible_host: "{{ public_dns_name }}"
+#         ansible_password: "{{ windows_password | default(hostvars['localhost'].generated_windows_password) }}"
+#         ansible_port: 5986
+#         ansible_user: Administrator
+#         ansible_ssh_user: Administrator
+#         ansible_winrm_server_cert_validation: ignore
+#         aws_region_final: "{{hostvars['localhost'].aws_region_final}}"
+#
+#     - name: Run infra-ec2-wait_for_linux_hosts Role
+#       import_role:
+#         name: ".//roles/infra-ec2-wait_for_windows_hosts"

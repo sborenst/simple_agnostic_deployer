@@ -1,0 +1,46 @@
+---
+# vim: set ft=ansible:
+# To use this method you need to set these variables (perhaps in env_secret_vars.yml)
+#
+# satellite_url: 'your.satellite.host.without.http.or.https.prefix'
+# satellite_org: 'your_Org_name'
+# satellite_activationkey: "activation_key_id_name"
+
+- name: Remove rh-amazon-rhui-client package
+  yum:
+    name: rh-amazon-rhui-client
+    state: absent
+
+- name: Remove satellite Cert
+  yum:
+    name: katello-ca-consumer-*.noarch
+    state: absent
+
+- name: Install Cert
+  # use rpm here to avoid issue when yum is broken (chicken&egg)
+  command: "rpm -Uvh {{satellite_url}}/pub/katello-ca-consumer-latest.noarch.rpm"
+
+- name: Register with activation-key
+  command: >
+    subscription-manager register
+    --org="{{satellite_org}}"
+    --activationkey="{{ satellite_activationkey }}"  --force
+
+- name: Enable Repositories
+  command: subscription-manager repos --enable=rhel-7-server-satellite-tools-6.3-rpms
+
+- name: Install Katello Agent
+  yum:
+    name: katello-agent
+    state: latest
+
+- name: Start Katello Agent
+  service:
+    name: goferd
+    state: started
+    enabled: yes
+
+- name: Enable repos for rhel
+  command: subscription-manager repos --enable "{{ item }}"
+  with_items:
+    - '{{ rhel_repos }}'

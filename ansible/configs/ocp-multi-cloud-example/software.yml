@@ -1,0 +1,8 @@
+---
+- name: Step 004 Software Dummy file
+  hosts: localhost
+  gather_facts: False
+  become: false
+  tasks:
+    - debug:
+        msg: "Software tasks Started - You can use this to add specific pre-steps for your config"

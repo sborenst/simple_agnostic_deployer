@@ -1,0 +1,3 @@
+---
+# defaults file for bastion
+# by default, do not copy over the user's private key
