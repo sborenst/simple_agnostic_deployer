@@ -11,6 +11,30 @@
     name: rh-amazon-rhui-client
     state: absent
 
+- name: list current repository files
+  command: "ls -1 /etc/yum.repos.d/"
+  register: repodircontents
+  tags:
+    - configure_repos
+    - remove_existing_repos
+
+- name: remove epel-release
+  package:
+    name: epel-release
+    use: yum
+    state: absent
+
+- name: remove current repository files
+  file:
+    path: /etc/yum.repos.d/{{ item }}
+    state: absent
+  # TODO: use with_fileglob here
+  with_items: "{{ repodircontents.stdout_lines }}"
+  ignore_errors: true
+  tags:
+    - configure_repos
+    - remove_existing_repos
+
 - name: Remove satellite Cert
   yum:
     name: katello-ca-consumer-*.noarch
