@@ -34,6 +34,7 @@ aws_region: ap-southeast-2
 ## Satellite credentials and URL should be defined in the secret.yml
 repo_method: satellite
 
+own_repo_path: "https://admin.example.com/repos/"
 ## Own Repo can be used by providing a repository host target:
 # repo_method: file
 # own_repo_path: "https://mycompany.example.com/repos/"
@@ -57,7 +58,7 @@ use_own_key: true
 env_authorized_key: "{{guid}}key"
 # Usually this value is passed as a -e variable and would be using the
 # administration key that should never be shared.
-key_name: "ocpkey"
+key_name: "{{guid}}key"
 ansible_ssh_private_key_file: ~/.ssh/{{key_name}}.pem
 
 ## Common packages installed on ALL hosts

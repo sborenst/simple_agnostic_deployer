@@ -8,17 +8,17 @@
       - vim
       - tmux
       - ntp
-      - wget
-      - git
-      - net-tools
-      - bind-utils
-      - iptables-services
-      - bridge-utils
       - bash-completion
-      - yum-versionlock
-      - httpd-tools
-      - sysstat
-      - strace
-      - tcpdump
+      # - wget
+      # - git
+      # - net-tools
+      # - bind-utils
+      # - iptables-services
+      # - bridge-utils
+      # - yum-versionlock
+      # - httpd-tools
+      # - sysstat
+      # - strace
+      # - tcpdump
   tags:
    - install_openshift_node_packages
