@@ -5,9 +5,15 @@
     name: "docker-{{ docker_version }}"
     state: present
 
+- name: Install yum-plugin-versionlock
+  yum:
+    name: "yum-plugin-versionlock"
+    state: present
+
 - name: Lock docker version
   command: yum versionlock add "docker*"
-
+  ignore_errors: true
+  
 - name: Generate docker-storage-setup config
   template:
     src: ./sysconfig.docker-storage-setup.j2
