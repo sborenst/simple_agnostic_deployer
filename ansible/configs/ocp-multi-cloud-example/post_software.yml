@@ -112,7 +112,7 @@
       - osrelease is version_compare("3.10", "<")
 
     - name: Create admin_project project (for OCP 3.10+)
-      command: "oc adm new-project {{admin_project}} --admin {{admin_user}} --node-selector='env=infra'\"
+      command: "oc adm new-project {{admin_project}} --admin {{admin_user}} --node-selector='env=infra'"
       when:
       - result | failed
       - osrelease is version_compare("3.10", ">=")
