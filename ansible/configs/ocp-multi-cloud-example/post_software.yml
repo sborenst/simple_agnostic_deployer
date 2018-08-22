@@ -160,8 +160,8 @@
     - "{{ ANSIBLE_REPO_PATH }}/configs/{{ env_type }}/env_vars.yml"
   roles:
     - role: "{{ ANSIBLE_REPO_PATH }}/roles/install-nexus"
-      desired_project: "{{admin_project}}"
-      nexus_version: "3"
+        desired_project: "{{admin_project}}"
+        nexus_version: "3"
       when: install_nexus|bool
     - role: "{{ ANSIBLE_REPO_PATH }}/roles/install-aws-broker"
       when: install_aws_broker|bool
