@@ -68,9 +68,9 @@
 # ############ Step 005 Post Software Deploy Tasks
 # ################################################################################
 # ################################################################################
-#
-# - import_playbook: ".//configs/{{ env_type }}/post_software.yml"
-#   tags:
-#     - step005
-#     - post_software
-#     - post_software_tasks
+
+- import_playbook: ".//configs/{{ env_type }}/post_software.yml"
+  tags:
+    - step005
+    - post_software
+    - post_software_tasks
