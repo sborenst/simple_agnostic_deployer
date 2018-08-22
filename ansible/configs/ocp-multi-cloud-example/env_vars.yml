@@ -209,8 +209,8 @@ docker_device: /dev/xvdb
 # # Is this running from Red Hat Ansible Tower
 # tower_run: false
 #
-# admin_user: opentlc-mgr
-# admin_project: "ocp-workshop"
+admin_user: user100
+admin_project: "rhte-workshop"
 #
 # ### Azure
 #
@@ -412,8 +412,8 @@ available_identity_providers:
 # #   - nexus2
 # #   - nexus3
 #
-# user_vols: 200
-# user_vols_size: 10Gi
+user_vols: 200
+user_vols_size: 10Gi
 #
 # cache_images:
 #   - "registry.access.redhat.com/jboss-eap-7/eap70-openshift:latest"

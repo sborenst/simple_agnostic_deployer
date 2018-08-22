@@ -30,7 +30,7 @@
    - role: "roles/host-common-tasks"
      when: install_common|bool
 
-- name: Configuring Bastion Hosts
+- name: Step 003.2 - Configuring Bastion Hosts
   hosts: bastions
   become: true
   gather_facts: false

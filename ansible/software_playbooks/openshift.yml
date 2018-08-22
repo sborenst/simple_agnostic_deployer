@@ -24,8 +24,6 @@
 
 ########################Configuring openshift-nodes
 
-
-
 - name: Step 004.2 - Node preparation for OpenShift deployment
   gather_facts: False
   become: yes
@@ -82,7 +80,7 @@
   tags:
     - install_openshift
     - step004
-    - step004.5
+    - step004.4
   tasks:
   roles:
     - role: "{{ ANSIBLE_REPO_PATH }}/roles/host-ocp-provisioner"
