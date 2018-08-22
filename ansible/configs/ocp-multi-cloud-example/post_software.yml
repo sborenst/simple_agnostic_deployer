@@ -151,23 +151,26 @@
       - name: allow OPENTLC-PROJECT-PROVISIONERS members to provision their own projects
         command: "oc adm policy add-cluster-role-to-group self-provisioner OPENTLC-PROJECT-PROVISIONERS"
 
-- name: Step 005.3 - Install OpenShift Components
-  hosts: masters
-  run_once: true
-  gather_facts: False
-  become: yes
-  vars_files:
-    - "{{ ANSIBLE_REPO_PATH }}/configs/{{ env_type }}/env_vars.yml"
-  roles:
-    - role: "{{ ANSIBLE_REPO_PATH }}/roles/install-nexus"
-        desired_project: "{{admin_project}}"
-        nexus_version: "3"
-      when: install_nexus|bool
-    - role: "{{ ANSIBLE_REPO_PATH }}/roles/install-aws-broker"
-      when: install_aws_broker|bool
-    - role: "{{ ANSIBLE_REPO_PATH }}/roles/openshift-ansible-broker"
-      when: install_openshiftapb|bool
-
+# - name: Step 005.3 - Install OpenShift Components
+#   hosts: masters
+#   run_once: true
+#   gather_facts: False
+#   become: yes
+#   roles:
+#     - role: "{{ ANSIBLE_REPO_PATH }}/roles/install-nexus"
+#       desired_project: "{{admin_project}}"
+#       nexus_version: "3"
+#       when: install_nexus|bool
+#     - role: "{{ ANSIBLE_REPO_PATH }}/roles/install-aws-broker"
+#       when: install_aws_broker|bool
+#     - role: "{{ ANSIBLE_REPO_PATH }}/roles/openshift-ansible-broker"
+#       when: install_openshiftapb|bool
+# We have much more on the full version
+# Prometheus, Grafana https://github.com/sborenst/ansible_agnostic_deployer/tree/development/ansible/roles/install-prometheus
+# Nexus:
+# openwhisk: https://github.com/sborenst/ansible_agnostic_deployer/tree/development/ansible/roles/install-openwhisk
+# Zabbix monitoring https://github.com/sborenst/ansible_agnostic_deployer/tree/development/ansible/roles/
+# And more
 
 - name: Step 005.x - Gather facts
   hosts:
