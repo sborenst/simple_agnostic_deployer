@@ -158,7 +158,7 @@ install_nfs: true
 # nfs_vg: nfsvg
 # nfs_pvs might change depending on your cloud provider
 nfs_pvs: /dev/xvdd
-# nfs_export_path: /srv/nfs
+nfs_export_path: /srv/nfs
 # nfs_size: 200
 
 
@@ -211,6 +211,7 @@ docker_device: /dev/xvdb
 #
 admin_user: user100
 admin_project: "rhte-workshop"
+
 #
 # ### Azure
 #
