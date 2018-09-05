@@ -10,7 +10,7 @@
     - generate_env_keys
   tasks:
   roles:
-    - role: ".//roles/infra-local-create-ssh_key"
+    - role: "./roles/infra-local-create-ssh_key"
       when: set_env_authorized_key is defined
 
 - name: Step 003.2 - Configure Repositories, Run common Role and Set SSH Key as authorised
