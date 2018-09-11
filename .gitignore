@@ -6,7 +6,6 @@
 *secrets[_-]vars.yml
 *secret[_-]var.yml
 *secrets[_-]var.yml
-ansible/workdir/*
 ansible/judd.sh
 *.swp
 scripts/*.rc
