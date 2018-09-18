@@ -55,7 +55,7 @@
 
 ########################Configuring nfs hosts
 
-- name: Step 004.3 - Configuring Nfs Host
+- name: Step 004.3 - Configuring NFS Host
   gather_facts: False
   become: yes
   order: sorted
