@@ -7,6 +7,7 @@
 *secret[_-]var.yml
 *secrets[_-]var.yml
 ansible/judd.sh
+ansible.cfg
 *.swp
 scripts/*.rc
 wk*.rc
