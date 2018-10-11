@@ -45,13 +45,16 @@
   command: "rpm -Uvh {{satellite_url}}/pub/katello-ca-consumer-latest.noarch.rpm"
 
 - name: Register with activation-key
-  command: >
-    subscription-manager register
-    --org="{{satellite_org}}"
-    --activationkey="{{ satellite_activationkey }}"  --force
+  redhat_subscription:
+    state: present
+    activationkey: "{{ satellite_activationkey }}"
+    org_id: "{{ satellite_org }}"
+    force_register: yes
 
-- name: Enable Repositories
-  command: subscription-manager repos --enable=rhel-7-server-satellite-tools-6.3-rpms
+- name: Enable Satellite Tools repository
+  rhsm_repository:
+    name: "rhel-7-server-satellite-tools-6.3-rpms"
+    state: enabled
 
 - name: Install Katello Agent
   yum:
@@ -65,6 +68,6 @@
     enabled: yes
 
 - name: Enable repos for rhel
-  command: subscription-manager repos --enable "{{ item }}"
-  with_items:
-    - '{{ rhel_repos }}'
+  rhsm_repository:
+    name: "{{ rhel_repos }}"
+    state: enabled
